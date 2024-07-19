@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienestar Integral</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e0f2f1;
+            color: #004d40;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #00695c;
+        }
+        .nav {
+            background-color: #4db6ac;
+            padding: 10px 0;
+        }
+        .nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .nav ul li {
+            margin: 0 10px;
+        }
+        .nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        select, button {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #4db6ac;
+        }
+        button {
+            background-color: #4db6ac;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #00695c;
+        }
+        #journal-entry {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #4db6ac;
+        }
+        @media (max-width: 768px) {
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            .nav ul li {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <ul>
+            <li><a href="#ejercicios">Ejercicios</a></li>
+            <li><a href="#meditacion">Meditación</a></li>
+            <li><a href="#journaling">Journaling</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Bienestar Integral</h1>
+
+        <section id="ejercicios" class="section">
+            <h2>Ejercicios Físicos</h2>
+            <select id="intensidad">
+                <option value="bajo">Intensidad Baja</option>
+                <option value="moderado">Intensidad Moderada</option>
+                <option value="alto">Intensidad Alta</option>
+            </select>
+            <button onclick="mostrarEjercicio()">Mostrar Ejercicio</button>
+            <div id="ejercicio-contenido"></div>
+        </section>
+
+        <section id="meditacion" class="section">
+            <h2>Meditación</h2>
+            <select id="tema-meditacion">
+                <option value="relajacion">Relajación</option>
+                <option value="concentracion">Concentración</option>
+                <option value="estres">Manejo del Estrés</option>
+            </select>
+            <button onclick="mostrarMeditacion()">Iniciar Meditación</button>
+            <div id="video-meditacion"></div>
+        </section>
+
+        <section id="journaling" class="section">
+            <h2>Journaling</h2>
+            <textarea id="journal-entry" placeholder="Escribe tus pensamientos aquí..."></textarea>
+            <button onclick="guardarEntrada()">Guardar Entrada</button>
+            <div id="entradas-previas"></div>
+        </section>
+    </div>
+
+    <script>
+        const ejercicios = {
+            bajo: [
+                { nombre: "Caminata suave", instrucciones: "Camina a un ritmo cómodo durante 10 minutos." },
+                { nombre: "Estiramientos básicos", instrucciones: "Realiza estiramientos suaves para todo el cuerpo durante 5 minutos." }
+            ],
+            moderado: [
+                { nombre: "Yoga", instrucciones: "Practica una rutina de yoga de 15 minutos para principiantes." },
+                { nombre: "Natación", instrucciones: "Nada a un ritmo moderado durante 20 minutos." }
+            ],
+            alto: [
+                { nombre: "HIIT", instrucciones: "Realiza un entrenamiento de alta intensidad por intervalos durante 15 minutos." },
+                { nombre: "Carrera", instrucciones: "Corre a un ritmo desafiante durante 20 minutos." }
+            ]
+        };
+
+        const meditaciones = {
+            relajacion: "3mFVCX2wmqw",
+            concentracion: "zg10W6iyYAU",
+            estres: "T3ysepzDn2A"
+        };
+
+        // Usamos un array para almacenar las entradas del diario en memoria
+        let journalEntries = [];
+
+        function mostrarEjercicio() {
+            const intensidad = document.getElementById('intensidad').value;
+            const ejerciciosIntensidad = ejercicios[intensidad];
+            const ejercicio = ejerciciosIntensidad[Math.floor(Math.random() * ejerciciosIntensidad.length)];
+            document.getElementById('ejercicio-contenido').innerHTML = `
+                <h3>${ejercicio.nombre}</h3>
+                <p>${ejercicio.instrucciones}</p>
+            `;
+        }
+
+        function mostrarMeditacion() {
+            const tema = document.getElementById('tema-meditacion').value;
+            const videoId = meditaciones[tema];
+            document.getElementById('video-meditacion').innerHTML = `
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            `;
+        }
+
+        function guardarEntrada() {
+            const entrada = document.getElementById('journal-entry').value;
+            const fecha = new Date().toLocaleDateString();
+            journalEntries.push({ fecha, entrada });
+            actualizarEntradasPrevias();
+            document.getElementById('journal-entry').value = '';
+        }
+
+        function actualizarEntradasPrevias() {
+            const entradasPrevias = document.getElementById('entradas-previas');
+            entradasPrevias.innerHTML = '';
+            for (let i = journalEntries.length - 1; i >= 0; i--) {
+                const { fecha, entrada } = journalEntries[i];
+                entradasPrevias.innerHTML += `<p><strong>${fecha}:</strong> ${entrada}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
